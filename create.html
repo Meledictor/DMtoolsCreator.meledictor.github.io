@@ -1,0 +1,308 @@
+<html>
+<head>
+	<title>DnD character creation</title>
+</head>
+<body onload="LoadData()">
+	<input type=button value="Скачать для документа" onclick="GetString()"> <input class="finalString" type="textarea" style="min-width: 30%;"><br>
+	<form>
+	<input type=reset value="Очистить">
+	<table>
+	<tr>
+		<td valign=top>
+			<fieldset><legend>Общая информация</legend>
+			<table width="100%">
+			<tr><td width="100%" colspan=2><input type="text" class="unitName" placeholder="Наименование" style="width: 100%"></td>
+			</tr>
+			<tr>
+			<td>
+				<select class="unitFraction">
+					<option value="creature">Creature</option>
+					<option value="player" selected>Player</option>
+					<option value="npc">NPC</option>
+				</select>
+			</td>
+			<td width="80%"><input type="text" class="unitLevel" placeholder="Уровень/Сложность" title="Уровень персонажа или Показатель Опасности (ПО)" style="width: 100%"></td>
+			</tr>
+			</table>
+			</fieldset>
+			<fieldset>
+				<legend>Параметры</legend>
+				<table>
+				<tr>
+					<th></th><th>Сил</th><th>Лов</th><th>Тел</th><th>Инт</th><th>Муд</th><th>Хар</th>
+				</tr>
+				<tr>
+					<td align=center><img src="images/die-308887_1280.png" width=20px height=20px style="cursor: pointer" onclick="StatsRandom()"> </td>
+					<td><input type="number" class="unitStr" min=1 max=30 value=10></td>
+					<td><input type="number" class="unitDex" min=1 max=30 value=10></td>
+					<td><input type="number" class="unitCon" min=1 max=30 value=10></td>
+					<td><input type="number" class="unitInt" min=1 max=30 value=10></td>
+					<td><input type="number" class="unitWis" min=1 max=30 value=10></td>
+					<td><input type="number" class="unitCha" min=1 max=30 value=10></td>
+				</tr>
+				</table>
+				<table>
+				<tr height=0.5em><td></td></tr>
+				<tr>
+					<td align=right>ОЗ</td><td><input type="text" class="unitHP" placeholder="" title="Здоровье считается по формуле: (Ур. * Кость Хитов) + (Ур. * Телосложение)"></td>
+				</tr>
+				<tr>
+					<td align=right>КД</td><td><input type="text" class="unitAC" placeholder="10"></td>
+				</tr>
+				<tr><td align=right>Скорость </td><td><input type="text" size=50 class="unitSpeed" placeholder="30фт."></td></tr>
+				<tr><td><br></td></tr>
+				<tr><td align=right>Тип </td><td><input type="text" size=50 class="unitType" placeholder="гуманоид (любая раса)"></td></tr>
+				<tr><td align=right>Языки </td><td><input type="text" size=50 class="unitLanguages"></td></tr>
+				<tr><td align=right>Размер </td><td><select class="unitSize"></select></td></tr>
+				<tr><td><br></td></tr>
+				<tr><td align=right>Сопротивление </td><td><input type="text" size=50 class="unitResist"></td></tr>
+				<tr><td align=right>Иммунитет </td><td><input type="text" size=50 class="unitImmune"></td></tr>
+				</table>
+			</fieldset>
+			<fieldset><legend>Действия</legend>
+				<table width=100% class="unitActions" id="unitActions">
+					<tr ><th style="width: 15%">Название</th><th style="width: 5%">Урон</th><th style="width: max-width">Описание</th><th style="width: min-width"></th></tr>
+					<tr class="unitActionLast"><td><input type=text disabled></td><td><input type=text disabled></td><td><input type=text disabled style="width: 100%"></td><td><img src="images/plus.png" width=18px height=18px style="cursor: pointer" onclick="AddAct()"></td></tr>
+				</table>
+			</fieldset>
+			<fieldset><legend>Особенности</legend>
+				<table width=100% class="unitTraits" id="unitTraits">
+					<tr><th width=10%>Название</th><th width=80%>Описание</th><th width=min></th></tr>
+					<tr class="unitTraitLast"><td><input type=text disabled></td><td><input type=text disabled style="width: 100%"></td><td><img src="images/plus.png" width=18px height=18px style="cursor: pointer" onclick="AddTrait()"></td></tr>
+				</table>
+			</fieldset>
+			<fieldset><legend>Заклинания</legend>
+				<label style="color: darkgrey; cursor: pointer;">Использовать заклинания <input class="useSpells" type="checkbox" onclick="HideForm('spellForm',checked)"></label>
+				<div class="spellForm" style="display: none;">
+				<p><input type="text" class="spellsDC" placeholder="Сложность" style="width: 100px"> <input type="text" class="spellsMod" placeholder="Бросок" style="width: 50px"> <input type="text" class="spellsDesc" placeholder="Заметка" style="width: 200px"></p>
+				Максимальный уровень <input class="spellsMaxLevel" type=number min=0 max=9 value=0 onchange="spellLevelChange(value)">
+				<div class="spellsSlots">Ячейки: </div>
+				<b>Список заклинаний</b><br>
+				<div class="unitSpells"></div>
+				</div>
+				</details>
+			</fieldset>
+		</td>
+		<td rowspan=2 valign=top width=50%>
+		<fieldset>
+		<legend>Описание</legend>
+		<textarea class="unitDescription" rows=24 style="border: none; resize: none; width: 100%" placeholder="..."></textarea>
+		</fieldset>
+		</td>
+	</tr>
+	</table>
+	</form>
+	
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.1.1/jquery.min.js"></script>
+	<script src="data/DnD5e_monsters_BD.js"></script>
+	<script src="data/DnD5e_spells_BD.js"></script>
+	<script src="data/Players_BD.js"></script>
+	
+	<script>
+	function LoadData(){
+		$('.unitSize').empty();
+		for(var key in monstersdata.sizeList)
+		{
+			$('.unitSize').append('<option value="'+key+'">'+monstersdata.sizeList[key]+'</option>');
+		}
+		$('.unitSize').val("M");
+		
+		console.log('data loaded');
+		
+		<!-- $('.spellsList').empty(); -->
+		<!-- for(var spell in spellsdata.allSpells) -->
+		<!-- { -->
+			<!-- $('.spellsList').append('<option value="'+spell+'">'+spellsdata.allSpells[spell].ru.name+'</option>'); -->
+		<!-- } -->
+		$('.unitSpells').empty();
+		for(var sl=0; sl<=9; sl++)
+		{
+			var sname = sl+' Круг';
+			if(sl==0)
+			{
+				sname= 'Заговоры';
+			}
+			$('.unitSpells').append('<details class="spellListLevel'+sl+'" block=false><summary>'+sname+'</summary></details>');
+		}
+		<!--Список заклинаний-->
+		for(var spell in spellsdata.allSpells){
+			if(spellsdata.allSpells[spell].en.source == "PHB"){
+			var spellText = ('Уровень: '+spellsdata.allSpells[spell].ru.level + '\n' + spellsdata.allSpells[spell].ru.castingTime + '\nДистанция: '+spellsdata.allSpells[spell].ru.range + '\nКомпоненты: '+spellsdata.allSpells[spell].ru.components + spellsdata.allSpells[spell].ru.materials + '\nДлительность: ' + spellsdata.allSpells[spell].ru.duration + '\nОписание: ' + spellsdata.allSpells[spell].ru.text).replace(/<br>/g,"\n");
+				<!-- spellText = spellText.replace(/<br>/g,"\n"); -->
+				$('.spellListLevel'+spellsdata.allSpells[spell].en.level).append('<label title="'+spellText+'"><input type="checkbox" value="'+spell+'">'+spellsdata.allSpells[spell].en.name+' / '+spellsdata.allSpells[spell].ru.name+'</label><br>');
+			}
+		}
+		<!--Ячейки заклинаний-->
+		for(var sl=1; sl<=9; sl++) 
+		{
+			$('.spellsSlots').append('<input type=text class="spellSlots'+sl+'" size=1 placeholder="'+sl+' круг"> ');
+		}
+		spellLevelChange($('.spellsMaxLevel').val());
+	}
+	
+	function StatsRandom(){
+		$('.unitStr').prop("value",Math.ceil(3 + Math.random() * 15));
+		$('.unitDex').prop("value",Math.ceil(3 + Math.random() * 15));
+		$('.unitInt').prop("value",Math.ceil(3 + Math.random() * 15));
+		$('.unitCon').prop("value",Math.ceil(3 + Math.random() * 15));
+		$('.unitWis').prop("value",Math.ceil(3 + Math.random() * 15));
+		$('.unitCha').prop("value",Math.ceil(3 + Math.random() * 15));
+	}
+	
+	function AddAct(){
+		$('.unitActionLast').before('<tr><td><input class="atkName" type=text></td><td><input class="atkAttack" type=text style="width: 100%"></td><td><input class="atkText" type=text style="width: 100%"></td><td><img src="images/delete2.png" width=17px height=17px style="cursor: pointer" onclick="DeleteAct(this)"></td></tr>');
+	}
+	
+	function AddTrait(){
+		$('.unitTraitLast').before('<tr><td><input class="traitsName" type=text></td><td><input class="traitsText" type=text style="width: 100%"></td><td><img src="images/delete2.png" width=17px height=17px style="cursor: pointer" onclick="DeleteTrait(this)"></td></tr>');
+	}
+	
+	function spellLevelChange(val){
+		for(var sl=1; sl<=9; sl++){
+			if(sl <= val)
+			{
+				$('.spellListLevel'+sl).show(150);
+				$('.spellSlots'+sl).show(200);
+			}
+			else
+			{
+				$('.spellListLevel'+sl).hide(150);
+				$('.spellListLevel'+sl).removeAttr("open");
+				$('.spellSlots'+sl).hide(150);
+			}
+		}
+	}
+	</script>
+	
+	<script>
+	function DeleteAct(cell){
+		var tmpRow = cell.parentNode.parentNode.rowIndex;
+		document.getElementById('unitActions').deleteRow(tmpRow);
+	}
+	
+	function DeleteTrait(cell){
+		var tmpRow = cell.parentNode.parentNode.rowIndex;
+		document.getElementById('unitTraits').deleteRow(tmpRow);
+	}
+	</script>
+	
+	<script>
+	function GetString(){
+		if($('.unitName').val() != null && $('.unitName').val() != "")
+		{
+			var acts = [];
+			for(var a=1; a<$('.unitActions tr').length-1; a++)
+			{
+				var tm_name = $('.unitActions tr:eq('+a+ ')').find('[class="atkName"]').val();
+				var tm_atack = $('.unitActions tr:eq('+a+ ')').find('[class="atkAttack"]').val();
+				var tm_text = $('.unitActions tr:eq('+a+ ')').find('[class="atkText"]').val();
+				
+				acts.push({name: tm_name, attack: tm_atack, text: tm_text});
+			}
+		
+			var tm_traits = [];
+			for(var a=1; a<$('.unitTraits tr').length-1; a++)
+			{
+				var tm_name = $('.unitTraits tr:eq('+a+ ')').find('[class="traitsName"]').val();
+				var tm_text = $('.unitTraits tr:eq('+a+ ')').find('[class="traitsText"]').val();
+				
+				tm_traits.push({name: tm_name, text: tm_text});
+			}
+			
+			var tm_spells= "";
+			tm_spells += 'Сложность '+ $('.spellsDC').val() + ', Бросок +' + $('.spellsMod').val() + '<br>';
+			tm_spells += $('.spellsDesc').val() ? $('.spellsDesc').val() + '<br>': '';
+			for(var sp=0; sp<=$('.spellsMaxLevel').val(); sp++){
+				if($('.spellListLevel'+sp+':has(input:checked)')){
+					var tm_str = (sp!=0 ? (sp+' Уровень' + ($('.spellSlots'+sp).val()>0 ? ('(' + $('.spellSlots'+sp).val() + ')') : '')) : 'Заговоры')+':<br>';
+					
+					for(var s of $('.spellListLevel'+sp+' label').filter(':has(input:checked)')){
+						tm_str += '<li title="'+$(s).attr('title')+'">' + $(s).text() + '</li>';
+					}
+					if($('.spellSlots'+sp).val()>0 || $('.spellListLevel'+sp+':has(input:checked)'))
+					{
+						tm_spells+=tm_str;
+					}
+				}
+			}
+			
+			var str = {
+				group: $('.unitFraction').val(),
+				name: $('.unitName').val(),
+				size: $('.unitSize').val(),
+				type: $('.unitType').val(),
+				ac: $('.unitAC').val(),
+				hp: $('.unitHP').val(),
+				speed: $('.unitSpeed').val(),
+				str: $('.unitStr').val(),
+				dex: $('.unitDex').val(),
+				int: $('.unitInt').val(),
+				con: $('.unitCon').val(),
+				wis: $('.unitWis').val(),
+				cha: $('.unitCha').val(),
+				immune: $('.unitImmune').val(),
+				resist: $('.unitResist').val(),
+				fiction: $('.unitDescription').val(),
+				};
+			
+			if($('.unitFraction').val() == 'player'){
+				str.level = $('.unitLevel').val();
+			}
+			else
+			{
+				str.cr = $('.unitLevel').val();
+			}
+			
+			if(tm_traits != null && tm_traits != ''){
+				str.trait = tm_traits;
+			}
+			
+			if(acts != null && acts != ''){
+				str.action = acts;
+			}
+			
+			if($('.useSpells').prop('checked') && tm_spells != null && tm_spells != ''){
+				str.spells = tm_spells;
+			}
+			
+			var unitId;
+			for(var unit in charsdata.dataList){
+				if(charsdata.dataList[unit].name == $('.unitName').val())
+				{
+					unitId = unit;
+				}
+			}
+			
+			if(unitId)
+			{
+				charsdata.dataList[unitId] = str;
+			}
+			else
+			{
+				console.log('new');
+				charsdata.dataList.push(str);
+			}
+			
+			$('.finalString').val(JSON.stringify(str) + ',');
+			<!-- SaveFile(); -->
+		}
+	}
+	
+	function SaveFile(){
+		var jsonData = JSON.stringify(charsdata);
+		console.log(jsonData);
+	}
+	
+	function HideForm(form, check){
+		
+		if(check){
+			$('.'+form).show();
+		}
+		else
+		{
+			$('.'+form).hide();
+		}
+	}
+	</script>
+</body>
+</html>
